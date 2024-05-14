@@ -18,7 +18,8 @@
         <ul>
           <li><a href="{% url 'home' %}">Home</a></li>  
           <li><a href="">Sobre</a></li>  
-          <li><a href=" url 'shows' %}">Shows</a></li>  
+          <li><a href="{% url 'shows' %}">Shows</a></li>  
+          <li><a href="{% url 'account_logout' %}">Logout</a></li>  
        
         </ul>
       </div>
@@ -29,9 +30,13 @@
       <div class="sub_title"> Site Exclusivo para funcionarios</div>
       <div class="btns">
         <button>Saiba mais</button>
-        <button href=" url 'shows' %}">Shows</button>
+        <a href="{% url 'shows' %}" style="all: unset;"> <button>Shows</button> </shows>
       </div>
     </div>
     
   </body>
+
+  <script>
+    
+  </script>
 </html>

@@ -9,6 +9,7 @@ def INDEX(request):
     }
     return render(request,'index.html',context)
 
+
 def ADD(request):
     if request.method == "POST":
         nome = request.POST.get('nome')
@@ -68,3 +69,5 @@ def UPDATE(request, id):
 def DELETE(request, id):
     Show.objects.filter(id=id).delete()
     return redirect('shows')
+
+

@@ -1,0 +1,7 @@
+{
+    "recommendations": [
+        "bigonesystems.django",
+        "batisteo.vscode-django",
+        "ms-python.vscode-pylance"
+    ]
+}

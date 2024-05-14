@@ -15,7 +15,7 @@ class Show(models.Model):
     elenco = models.CharField(max_length=200)
     secoes = models.IntegerField()
     data = models.DateField()
-    horarios = models.DateTimeField()
+    horarios = models.TimeField()
 
     def __str__(self):
         return self.nome
