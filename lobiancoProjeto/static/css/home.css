@@ -1,29 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
 *{
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Poppins',sans-serif;
-}
-::selection{
-  color: #000;
-  background: #fff;
-}
-nav{
-  position: fixed;
-  background: #4e0202;
-  width: 100%;
-  padding: 10px 0;
-  z-index: 12;
-}
-nav .menu{
-  max-width: 1250px;
-  margin: auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   padding: 0 20px;
 }
+
+body{
+
+  background: url("https://images.unsplash.com/photo-1514306191717-452ec28c7814?q=80&w=1469&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D") center / cover;
+
+}
+
 .menu .logo a{
   text-decoration: none;
   color: #fff;
@@ -54,7 +39,6 @@ nav .menu{
   color: black;
 }
 .img{
-  background: url('../imgs/teatro.jpg')no-repeat;
   width: 100%;
   height: 100vh;
   background-size: cover;

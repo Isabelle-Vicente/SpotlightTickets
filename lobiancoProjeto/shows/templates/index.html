@@ -1,222 +1,252 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRUD de Shows</title>
-
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    
-</head>
+{% extends 'base/base.html' %}
+{% load static %}
 
 
-<body>
-    <div class="container">
-        <h2>CRUD de Shows</h2>
-        <div class="row mb-3">
-            <div class="col">
-                <button class="btn btn-success" data-toggle="modal" data-target="#addShowModal">Adicionar Show</button>
-            </div>
+
+
+{% block head %}
+    <title>Menu de Shows</title>
+    <link rel="stylesheet" href="{% static 'css/style.css'%}">    
+{% endblock %}    
+
+{% block content %}
+<main class="table" id="customers_table">
+    <section class="table__header">
+        <h1>Shows</h1>
+        <div class="input-group">
+            <input type="search" placeholder="Search Data...">
         </div>
-        <table class="table">
+        <button class="btn btn-success" data-toggle="modal" data-target="#addShowModal">Adicionar Show</button>
+       
+    </section>
+    <section class="table__body">
+        <table>
             <thead>
                 <tr>
-                    <th>Nome</th>
-                    <th>Descrição</th>
-                    <th>Preço</th>
-                    <th>Tipo</th>
-                    <th>Ações</th>
+                    <th> Id </th>
+                    <th> Nome </th>
+                    <th> Assentos </th>
+                    <th> Data </th>
+                    <th> Tipo </th>
+                    <th> Preço </th>
+                    <th>  </th>
+                    <th>  </th>
+                  
                 </tr>
             </thead>
             <tbody>
-                <!-- Aqui você pode iterar sobre os shows -->
-                {% for show in shows %}
+                  {% for show in shows %}
                 <tr>
-                    <td>{{ show.nome }}</td>
-                    <td>{{ show.descricao }}</td>
-                    <td>{{ show.preco }}</td>
-                    <td>{{ show.tipo }}</td>
+                    <td> {{show.id}} </td>
+                    <td> <img src="{{ show.imagem.url }}" alt=""> <label id="limitedTitle">{{show.nome}}</label></td>
+                    <td> {{show.assentos}} </td>
+                    <td> {{show.data}} </td>
                     <td>
+                        <p class="status delivered">{{show.tipo}}</p>
+                    </td>
+                    <td> <strong> ${{ show.preco}} </strong></td>
+                    <td>  
                         <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editShowModal{{ show.id }}">Editar</button>
+                    </td>
+                    <td>   
                         <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteShowModal{{ show.id }}">Excluir</button>
                     </td>
+
+                    <!-- <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editShowModal{{ show.id }}">Editar</button>
+                    <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteShowModal{{ show.id }}">Excluir</button> -->
+                   
                 </tr>
-                {% endfor %}
+                   {% endfor %}
+                </tr>
             </tbody>
         </table>
-    </div>
+    </section>
+</main>
 
-    <!-- Modais -->
-    <!-- Modal Adicionar Show -->
-    <div class="modal fade" id="addShowModal" tabindex="-1" role="dialog" aria-labelledby="addShowModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addShowModalLabel">Adicionar Show</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form action="{% url 'add' %}" method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="imagem">Imagem:</label>
-                            <input type="file" class="form-control" id="imagem" name="imagem" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="nome">Nome</label>
-                            <input type="text" class="form-control" id="nome" name="nome" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="descricao">Descrição</label>
-                            <textarea class="form-control" id="descricao" name="descricao" required></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="preco">Preço</label>
-                            <input type="number" class="form-control" id="preco" name="preco" step="0.01" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="tipo">Tipo</label>
-                            <select class="form-control" id="tipo" name="tipo" required>
-                                <option value="Comedia">Comédia</option>
-                                <option value="Acao">Ação</option>
-                                <option value="Drama">Drama</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="assentos">Assentos</label>
-                            <input type="number" class="form-control" id="assentos" name="assentos" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="elenco">Elenco</label>
-                            <input type="text" class="form-control" id="elenco" name="elenco" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="secoes">Seções</label>
-                            <input type="number" class="form-control" id="secoes" name="secoes" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="data">Data</label>
-                            <input type="date" class="form-control" id="data" name="data" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="horarios">Horários</label>
-                            <input type="time" class="form-control" id="horarios" name="horarios" required>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                        <button type="submit" class="btn btn-primary">Salvar</button>
-                    </div>
-                </form>
+
+<!-- Modais -->
+<!-- Modal Adicionar Show -->
+<div class="modal fade" id="addShowModal" tabindex="-1" role="dialog" aria-labelledby="addShowModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addShowModalLabel">Adicionar Show</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
+            <form action="{% url 'add' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="imagem">Imagem:</label>
+                        <input type="file" class="form-control" id="imagem" name="imagem" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nome">Nome</label>
+                        <input type="text" class="form-control" id="nome" name="nome" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="descricao">Descrição</label>
+                        <textarea class="form-control" id="descricao" name="descricao" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="preco">Preço</label>
+                        <input type="number" class="form-control" id="preco" name="preco" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tipo">Tipo</label>
+                        <select class="form-control" id="tipo" name="tipo" required>
+                            <option value="Comedia">Comédia</option>
+                            <option value="Acao">Ação</option>
+                            <option value="Drama">Drama</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="assentos">Assentos</label>
+                        <input type="number" class="form-control" id="assentos" name="assentos" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="elenco">Elenco</label>
+                        <input type="text" class="form-control" id="elenco" name="elenco" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="secoes">Seções</label>
+                        <input type="number" class="form-control" id="secoes" name="secoes" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="data">Data</label>
+                        <input type="date" class="form-control" id="data" name="data" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="horarios">Horários</label>
+                        <input type="time" class="form-control" id="horarios" name="horarios" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
 
-    <!-- Modal Editar Show -->
-    {% for show in shows %}
-    <div class="modal fade" id="editShowModal{{ show.id }}" tabindex="-1" role="dialog" aria-labelledby="editShowModalLabel{{ show.id }}" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editShowModalLabel{{ show.id }}">Editar Show</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form action="{% url 'update' show.id %}" method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="imagem">Imagem:</label>
-                            <input type="file" id="imagem" name="imagem">
-                            {% if show.imagem %}
-                                <div>
-                                    <img src="{{ show.imagem.url }}" alt="{{ show.nome }}" width="200">
-                                </div>
-                            {% endif %}
-                        </div>
-                        <div class="form-group">
-                            <label for="nome">Nome</label>
-                            <input value="{{ show.nome }}" type="text" class="form-control" id="nome" name="nome" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="descricao">Descrição</label>
-                            <textarea class="form-control" id="descricao" name="descricao" required>{{ show.descricao }}</textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="preco">Preço</label>
-                            <input value="{{ show.preco|floatformat:2  }}" type="number" class="form-control" id="preco" name="preco" step="0.01" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="tipo">Tipo</label>
-                            <select class="form-control" id="tipo" name="tipo" required>
-                                <option value="Comedia" {% if show.tipo == "Comedia" %}selected{% endif %}>Comédia</option>
-                                <option value="Acao" {% if show.tipo == "Acao" %}selected{% endif %}>Ação</option>
-                                <option value="Drama" {% if show.tipo == "Drama" %}selected{% endif %}>Drama</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="assentos">Assentos</label>
-                            <input value="{{ show.assentos }}" type="number" class="form-control" id="assentos" name="assentos" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="elenco">Elenco</label>
-                            <input value="{{ show.elenco }}" type="text" class="form-control" id="elenco" name="elenco" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="secoes">Seções</label>
-                            <input value="{{ show.secoes }}" type="number" class="form-control" id="secoes" name="secoes" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="data">Data</label>
-                            <input value="{{ show.data|date:"Y-m-d" }}" type="date" class="form-control" id="data" name="data" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="horarios">Horários</label>
-                            <input value="{{ show.horarios|time:'h:i:s' }}" type="time" class="form-control" id="horarios" name="horarios" required>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                        <button type="submit" class="btn btn-primary">Salvar</button>
-                    </div>
-                </form>
+<!-- Modal Editar Show -->
+{% for show in shows %}
+<div class="modal fade" id="editShowModal{{ show.id }}" tabindex="-1" role="dialog" aria-labelledby="editShowModalLabel{{ show.id }}" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editShowModalLabel{{ show.id }}">Editar Show</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
+            <form action="{% url 'update' show.id %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="imagem">Imagem:</label>
+                        <input type="file" id="imagem" name="imagem">
+                        {% if show.imagem %}
+                            <div>
+                                <img src="{{ show.imagem.url }}" alt="{{ show.nome }}" width="200">
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="nome">Nome</label>
+                        <input value="{{ show.nome }}" type="text" class="form-control" id="nome" name="nome" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="descricao">Descrição</label>
+                        <textarea class="form-control" id="descricao" name="descricao" required>{{ show.descricao }}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="preco">Preço</label>
+                        <input value="{{ show.preco|floatformat:2  }}" type="number" class="form-control" id="preco" name="preco" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tipo">Tipo</label>
+                        <select class="form-control" id="tipo" name="tipo" required>
+                            <option value="Comedia" {% if show.tipo == "Comedia" %}selected{% endif %}>Comédia</option>
+                            <option value="Acao" {% if show.tipo == "Acao" %}selected{% endif %}>Ação</option>
+                            <option value="Drama" {% if show.tipo == "Drama" %}selected{% endif %}>Drama</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="assentos">Assentos</label>
+                        <input value="{{ show.assentos }}" type="number" class="form-control" id="assentos" name="assentos" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="elenco">Elenco</label>
+                        <input value="{{ show.elenco }}" type="text" class="form-control" id="elenco" name="elenco" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="secoes">Seções</label>
+                        <input value="{{ show.secoes }}" type="number" class="form-control" id="secoes" name="secoes" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="data">Data</label>
+                        <input value="{{ show.data|date:"Y-m-d" }}" type="date" class="form-control" id="data" name="data" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="horarios">Horários</label>
+                        <input value="{{ show.horarios|time:'h:i:s' }}" type="time" class="form-control" id="horarios" name="horarios" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
         </div>
     </div>
-    {% endfor %}
+</div>
+{% endfor %}
 
-    <!-- Modal Excluir Show -->
-    {% for show in shows %}
-    <div class="modal fade" id="deleteShowModal{{ show.id }}" tabindex="-1" role="dialog" aria-labelledby="deleteShowModalLabel{{ show.id }}" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="deleteShowModalLabel{{ show.id }}">Excluir Show</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form action="{% url 'delete' show.id %}" method="post">
-                    {% csrf_token %}
-                    <div class="modal-body">
-                        <p>Você tem certeza que deseja excluir o show "{{ show.nome }}"?</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-danger">Excluir</button>
-                    </div>
-                </form>
+<!-- Modal Excluir Show -->
+{% for show in shows %}
+<div class="modal fade" id="deleteShowModal{{ show.id }}" tabindex="-1" role="dialog" aria-labelledby="deleteShowModalLabel{{ show.id }}" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteShowModalLabel{{ show.id }}">Excluir Show</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
+            <form action="{% url 'delete' show.id %}" method="post">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <p>Você tem certeza que deseja excluir o show "{{ show.nome }}"?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Excluir</button>
+                </div>
+            </form>
         </div>
     </div>
-    {% endfor %}
+</div>
+{% endfor %}
 
-    <!-- Scripts -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
-</html>
+<!-- Scripts -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', function() {
+      var titleElement = document.getElementById('limitedTitle');
+      var originalTitle = titleElement.textContent;
+      var maxLength = 18; // número máximo de caracteres
+  
+      if (originalTitle.length > maxLength) {
+        var limitedTitle = originalTitle.substring(0, maxLength) + '...';
+        titleElement.textContent = limitedTitle;
+      }
+    });
+  </script>
+{% endblock %}
