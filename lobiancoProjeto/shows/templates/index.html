@@ -4,8 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CRUD de Shows</title>
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    
 </head>
+
+
 <body>
     <div class="container">
         <h2>CRUD de Shows</h2>
@@ -53,9 +57,13 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="{% url 'add' %}" method="post">
+                <form action="{% url 'add' %}" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="modal-body">
+                        <div class="form-group">
+                            <label for="imagem">Imagem:</label>
+                            <input type="file" class="form-control" id="imagem" name="imagem" required>
+                        </div>
                         <div class="form-group">
                             <label for="nome">Nome</label>
                             <input type="text" class="form-control" id="nome" name="nome" required>
@@ -117,48 +125,57 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="{% url 'edit' show.id %}" method="post">
+                <form action="{% url 'update' show.id %}" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
-					<div class="modal-body">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="imagem">Imagem:</label>
+                            <input type="file" id="imagem" name="imagem">
+                            {% if show.imagem %}
+                                <div>
+                                    <img src="{{ show.imagem.url }}" alt="{{ show.nome }}" width="200">
+                                </div>
+                            {% endif %}
+                        </div>
                         <div class="form-group">
                             <label for="nome">Nome</label>
-                            <input value="{{show.nome}}" type="text" class="form-control" id="nome" name="nome" required>
+                            <input value="{{ show.nome }}" type="text" class="form-control" id="nome" name="nome" required>
                         </div>
                         <div class="form-group">
                             <label for="descricao">Descrição</label>
-                            <textarea class="form-control" id="descricao" name="descricao" required>{{show.descricao}}</textarea>
+                            <textarea class="form-control" id="descricao" name="descricao" required>{{ show.descricao }}</textarea>
                         </div>
                         <div class="form-group">
                             <label for="preco">Preço</label>
-                            <input value="{{show.preco}}" type="number" class="form-control" id="preco" name="preco" step="0.01" required>
+                            <input value="{{ show.preco|floatformat:2  }}" type="number" class="form-control" id="preco" name="preco" step="0.01" required>
                         </div>
                         <div class="form-group">
                             <label for="tipo">Tipo</label>
                             <select class="form-control" id="tipo" name="tipo" required>
-                                <option value="Comedia">Comédia</option>
-                                <option value="Acao">Ação</option>
-                                <option value="Drama">Drama</option>
+                                <option value="Comedia" {% if show.tipo == "Comedia" %}selected{% endif %}>Comédia</option>
+                                <option value="Acao" {% if show.tipo == "Acao" %}selected{% endif %}>Ação</option>
+                                <option value="Drama" {% if show.tipo == "Drama" %}selected{% endif %}>Drama</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="assentos">Assentos</label>
-                            <input value="{{show.assentos}}" type="number" class="form-control" id="assentos" name="assentos" required>
+                            <input value="{{ show.assentos }}" type="number" class="form-control" id="assentos" name="assentos" required>
                         </div>
                         <div class="form-group">
                             <label for="elenco">Elenco</label>
-                            <input value="{{show.elenco}}" type="text" class="form-control" id="elenco" name="elenco" required>
+                            <input value="{{ show.elenco }}" type="text" class="form-control" id="elenco" name="elenco" required>
                         </div>
                         <div class="form-group">
                             <label for="secoes">Seções</label>
-                            <input value="{{show.secoes}}" type="number" class="form-control" id="secoes" name="secoes" required>
+                            <input value="{{ show.secoes }}" type="number" class="form-control" id="secoes" name="secoes" required>
                         </div>
                         <div class="form-group">
                             <label for="data">Data</label>
-                            <input value="{{show.data}}" type="date" class="form-control" id="data" name="data" required>
+                            <input value="{{ show.data|date:"Y-m-d" }}" type="date" class="form-control" id="data" name="data" required>
                         </div>
                         <div class="form-group">
                             <label for="horarios">Horários</label>
-                            <input value="{{show.horarios}}" type="datetime-local" class="form-control" id="horarios" name="horarios" required>
+                            <input value="{{ show.horarios|time:'h:i:s' }}" type="time" class="form-control" id="horarios" name="horarios" required>
                         </div>
                     </div>
                     <div class="modal-footer">

@@ -1,4 +1,6 @@
-from django.shortcuts import redirect, render
+import hashlib
+import os
+from django.shortcuts import get_object_or_404, redirect, render
 
 from shows.models import Show
 
@@ -21,6 +23,7 @@ def ADD(request):
         secoes = request.POST.get('secoes')
         data = request.POST.get('data')
         horarios = request.POST.get('horarios')
+        imagem = request.FILES.get('imagem')
   
 
         shows = Show(
@@ -32,40 +35,53 @@ def ADD(request):
             elenco = elenco,
             secoes = secoes,
             data = data,
-            horarios = horarios
+            horarios = horarios,
+            imagem = imagem
         )
         shows.save()
         return redirect('shows')
     
     return render(request,'index.html')
 
-def EDIT(request, id):  # Adicione o argumento 'id' aqui
-    show = Show.objects.get(id=id)
-    context = {'show': show}
-    return render(request, 'index.html', context)
-
-
 
 def UPDATE(request, id):
-    if request.method == "POST":
-        shows = Show.objects.get(id=id) 
-        shows.nome = request.POST.get('nome')
-        shows.descricao = request.POST.get('descricao')
-        shows.preco = request.POST.get('preco')
-        shows.tipo = request.POST.get('tipo')
-        shows.assentos = request.POST.get('assentos')
-        shows.elenco = request.POST.get('elenco')
-        shows.secoes = request.POST.get('secoes')
-        shows.data = request.POST.get('data')
-        shows.horarios = request.POST.get('horarios')
-  
-        shows.save()
-        return redirect('shows')
-    else:
-        fun = Show.objects.all()
-        context = {'shows':shows}
-        return render(request, 'index.html', context)
+    show = get_object_or_404(Show, pk=id)
+    old_image_path = show.imagem.path if show.imagem else None
 
+    if request.method == "POST":
+        # Atualize os campos do show
+        show.nome = request.POST.get('nome')
+        show.descricao = request.POST.get('descricao')
+        show.preco = request.POST.get('preco')
+        show.tipo = request.POST.get('tipo')
+        show.assentos = request.POST.get('assentos')
+        show.elenco = request.POST.get('elenco')
+        show.secoes = request.POST.get('secoes')
+        show.data = request.POST.get('data')
+        show.horarios = request.POST.get('horarios')
+        
+        # Verifique se uma nova imagem foi carregada
+        if 'imagem' in request.FILES:
+            new_image = request.FILES['imagem']
+            new_image_hash = hashlib.md5(new_image.read()).hexdigest()
+
+            # Verifique se a nova imagem é diferente da imagem existente
+            if old_image_path:
+                with open(old_image_path, 'rb') as f:
+                    old_image_hash = hashlib.md5(f.read()).hexdigest()
+                
+                if new_image_hash != old_image_hash:
+                    show.imagem = new_image
+                    # Se existir uma imagem antiga, remova-a
+                    if os.path.isfile(old_image_path):
+                        os.remove(old_image_path)
+            else:
+                show.imagem = new_image
+
+        show.save()
+        return redirect('shows')
+
+    return render(request, 'index.html')
 def DELETE(request, id):
     Show.objects.filter(id=id).delete()
     return redirect('shows')

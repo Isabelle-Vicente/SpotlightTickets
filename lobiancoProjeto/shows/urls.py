@@ -5,7 +5,6 @@ from . import views
 urlpatterns = [
     path('', views.INDEX, name='shows'),
     path('add/', views.ADD, name='add'),
-    path('edit/<int:id>/', views.EDIT, name='edit'),  # Incluído o parâmetro de ID
     path('update/<int:id>/', views.UPDATE, name='update'),
     path('delete/<int:id>/', views.DELETE, name='delete')
 ]

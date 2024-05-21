@@ -1,4 +1,7 @@
+import os
 from django.db import models
+from django.dispatch import receiver
+from django.db.models.signals import post_delete
 
 class Show(models.Model):
     TIPO_CHOICES = (
@@ -16,6 +19,13 @@ class Show(models.Model):
     secoes = models.IntegerField()
     data = models.DateField()
     horarios = models.TimeField()
+    imagem = models.ImageField(upload_to='shows/')
 
     def __str__(self):
         return self.nome
+    
+@receiver(post_delete, sender=Show)
+def delete_show_image(sender, instance, **kwargs):
+    if instance.imagem:
+        if os.path.isfile(instance.imagem.path):
+            os.remove(instance.imagem.path)

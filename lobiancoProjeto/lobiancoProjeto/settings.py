@@ -14,7 +14,7 @@ import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 # Quick-start development settings - unsuitable for production
@@ -95,14 +95,18 @@ WSGI_APPLICATION = 'lobiancoProjeto.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'HOST' : 'aws-0-sa-east-1.pooler.supabase.com',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'postgres',
-        'USER' : 'postgres.oicpxxrkbegxirbckefm',
-        'PASSWORD' : 'lobianco*220705',
-         'PORT' : '5432',
+        'USER': 'postgres.fdvermdxctbffplxamyu',
+        'PASSWORD': 'LucasPassos*220705',
+        'HOST': 'aws-0-sa-east-1.pooler.supabase.com',
+        'PORT': '5432',
+        'OPTIONS': {
+            'sslmode': 'require',
+        },
     }
- }
+}
+
 
 #    DATABASES = {
 #    'default': {
@@ -141,8 +145,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
-
-LANGUAGE_CODE = 'PT-BR'
+#LANGUAGE_CODE = 'PT-BR'
 
 TIME_ZONE = 'UTC'
 
@@ -161,9 +164,12 @@ STATICFILES_DIRS = [
     
 STATIC_URL = 'static/'
 
+MEDIA_URL = ' /media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_REDIRECT_URL = 'home' 
+LOGIN_REDIRECT_URL = 'home'
