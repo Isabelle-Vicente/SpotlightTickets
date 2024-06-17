@@ -2,6 +2,7 @@ import os
 from django.db import models
 from django.dispatch import receiver
 from django.db.models.signals import post_delete
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 class Show(models.Model):
     TIPO_CHOICES = (
@@ -14,9 +15,19 @@ class Show(models.Model):
     descricao = models.CharField(max_length=500)
     preco = models.DecimalField(max_digits=10, decimal_places=2)
     tipo = models.CharField(max_length=7, choices=TIPO_CHOICES) 
-    assentos = models.IntegerField()
+    assentos = models.IntegerField(
+        validators=[
+             MinValueValidator(1), 
+            MaxValueValidator(50)  
+        ]
+    )
     elenco = models.CharField(max_length=200)
-    secoes = models.IntegerField()
+    secoes = models.IntegerField(
+         validators=[
+             MinValueValidator(1), 
+            MaxValueValidator(5)  
+        ]
+    )
     data = models.DateField()
     horarios = models.TimeField()
     imagem = models.ImageField(upload_to='shows/')

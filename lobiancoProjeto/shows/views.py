@@ -6,6 +6,7 @@ from shows.models import Show
 
 def INDEX(request):
     shows = Show.objects.all()
+
     context = {
         'shows':shows,
     }
@@ -25,7 +26,9 @@ def ADD(request):
         horarios = request.POST.get('horarios')
         imagem = request.FILES.get('imagem')
   
-
+        if(int(secoes) < 0 or int(secoes) > 5 or int(assentos) < 0 or int(assentos) > 50):
+            return render(request,'index.html')
+    
         shows = Show(
             nome = nome,
             descricao = descricao,
@@ -59,6 +62,9 @@ def UPDATE(request, id):
         show.secoes = request.POST.get('secoes')
         show.data = request.POST.get('data')
         show.horarios = request.POST.get('horarios')
+
+        if(int(show.secoes) < 0 or int(show.secoes) > 5 or int(show.assentos) < 0 or int(show.assentos) > 50):
+            return render(request,'index.html')
         
         # Verifique se uma nova imagem foi carregada
         if 'imagem' in request.FILES:
