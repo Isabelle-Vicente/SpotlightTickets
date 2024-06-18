@@ -151,3 +151,7 @@ input::-webkit-input-placeholder {
   input:-ms-input-placeholder {
     color: transparent;
   }
+
+  .error-messages{
+    color: white;
+  }
