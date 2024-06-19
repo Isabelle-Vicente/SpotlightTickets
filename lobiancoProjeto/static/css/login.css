@@ -155,3 +155,8 @@ input::-webkit-input-placeholder {
   .error-messages{
     color: white;
   }
+
+  .login{
+    margin-top: 4%;
+    color: white;
+  }

@@ -1,36 +1,57 @@
-{% extends "account/base_entrance.html" %}
-{% load allauth i18n %}
-{% block head_title %}
-    {% trans "Signup" %}
-{% endblock head_title %}
-{% block content %}
-    {% element h1 %}
-        {% trans "Sign Up" %}
-    {% endelement %}
-    {% setvar link %}
-        <a href="{{ login_url }}">
-        {% endsetvar %}
-        {% setvar end_link %}
-        </a>
-    {% endsetvar %}
-    <p>{% blocktranslate %}Already have an account? Then please {{ link }}sign in{{ end_link }}.{% endblocktranslate %}</p>
-    {% if not SOCIALACCOUNT_ONLY %}
-        {% url 'account_signup' as action_url %}
-        {% element form form=form method="post" action=action_url tags="entrance,signup" %}
-            {% slot body %}
-                {% csrf_token %}
-                {% element fields form=form unlabeled=True %}
-                {% endelement %}
-                {{ redirect_field }}
-            {% endslot %}
-            {% slot actions %}
-                {% element button tags="prominent,signup" type="submit" %}
-                    {% trans "Sign Up" %}
-                {% endelement %}
-            {% endslot %}
-        {% endelement %}
-    {% endif %}
-    {% if SOCIALACCOUNT_ENABLED %}
-        {% include "socialaccount/snippets/login.html" with page_layout="entrance" %}
-    {% endif %}
-{% endblock content %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro</title>
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+</head>
+<body>
+    <div class="wrapper">
+        <form method="post" action="{% url 'account_signup' %}">
+            {% csrf_token %}
+            <h2>Registro</h2>
+            <div class="error-messages">
+                {% if form.non_field_errors %}
+                    <ul>
+                        {% for error in form.non_field_errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                {% for field in form %}
+                    {% if field.errors %}
+                        <ul>
+                            {% for error in field.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <div class="input-field">
+                {{ form.username }}
+                <label for="{{ form.username.id_for_label }}">Insira seu nome de usuário</label>
+            </div>
+            <div class="input-field">
+                {{ form.email }}
+                <label for="{{ form.email.id_for_label }}">Insira seu email</label>
+            </div>
+            <div class="input-field">
+                {{ form.password1 }}
+                <label for="{{ form.password1.id_for_label }}">Insira sua senha</label>
+            </div>
+            <div class="input-field">
+                {{ form.password2 }}
+                <label for="{{ form.password2.id_for_label }}">Confirme sua senha</label>
+            </div>
+            <button type="submit">Registrar</button>
+            <div class="login">
+                <p>Já possui uma conta? <a href="{% url 'account_login' %}">Login</a></p>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
