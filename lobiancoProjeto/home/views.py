@@ -7,3 +7,6 @@ def index (request):
 
 def home (request):
     return render(request, 'home.html')
+
+def sobre(request):
+    return render(request, 'sobre-nos.html')
