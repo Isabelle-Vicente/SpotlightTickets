@@ -247,4 +247,32 @@
       }
     });
   </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Seleciona o elemento de input de busca
+        var searchInput = document.querySelector('input[type="search"]');
+        
+        // Adiciona um listener para o evento de input
+        searchInput.addEventListener('input', function() {
+            var filterValue = searchInput.value.toUpperCase(); // Valor do input de busca em maiúsculas
+            
+            // Seleciona todas as linhas da tabela (exceto o cabeçalho)
+            var rows = document.querySelectorAll('#customers_table table tbody tr');
+            
+            // Itera sobre cada linha e verifica se contém o valor de busca
+            rows.forEach(function(row) {
+                var titleElement = row.querySelector('label[id^="limitedTitle"]');
+                if (titleElement) {
+                    var titleText = titleElement.textContent || titleElement.innerText;
+                    if (titleText.toUpperCase().indexOf(filterValue) > -1) {
+                        row.style.display = ''; // Mostra a linha se corresponder ao filtro
+                    } else {
+                        row.style.display = 'none'; // Oculta a linha se não corresponder ao filtro
+                    }
+                }
+            });
+        });
+    });
+</script>
 {% endblock %}
